@@ -1,0 +1,8 @@
+{% extends "app/index.html" %}
+
+{% block main %}
+<h1>{{ post.title }}</h1>
+<span>Author: {{ post.author }}</span>
+<span>Created at: {{ post.pub_date }}</span>
+<p>{{ post.content }}</p>
+{% endblock main %}

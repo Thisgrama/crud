@@ -1,0 +1,103 @@
+{% load static %}
+{% load humanize %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'app/index.css' %}">
+        <link rel="stylesheet" href="{% static 'app/components.css' %}">
+        <link rel="stylesheet" href="{% static 'app/buttons.css' %}">
+        <link rel="icon" href="{% static 'app/images/icons8-crud-64.png' %}">
+        <title>CRUD</title>
+    </head>
+    <body>
+        <header class="site-header">
+            <a href="{% url 'index' %}">
+                <h1 class="site-logo">
+                    My CRUD in Django
+                </h1>
+            </a>
+            <ul class="site-header-menu"> 
+                <li><a href="{% url 'register' %}">Sign up</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+            </ul>
+        </header>
+        <main>
+            {% block main %}
+                <header class="post-list-header">
+                    <h2 class="post-list-title">
+                        Post list
+                    </h2>
+                    <a href="{% url "create post" %}">
+                        <button class="btn create-btn">Create post</button>
+                    </a>
+                </header>
+                <table class="post-list">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titulo</th>
+                            <th>Content</th>
+                            <th>Author</th>
+                            <th>Created at</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in post_list %}
+                            <tr>
+                                <th>{{ post.id }}</th>
+                                <th>{{ post.title }}</th>
+                                <th>{{ post.short_content }}</th>
+                                <th>{{ post.author }}</th>
+                                {% if post.update_time != post.pub_date %}
+                                    <th>{{ post.pub_date|naturaltime }} (edited {{ post.update_time|naturaltime }})</th>
+                                {% else %}
+                                    <th>{{ post.pub_date|naturaltime }}</th>
+                                {% endif %}
+                                <th class="th-actions">
+                                    <a href="{% url 'details post' post.id %}">
+                                        <button class="btn read-btn">Read</button>
+                                    </a>
+                                    {% if request.user == post.author %}
+                                        <a href="{% url "edit post" post.id %}">
+                                            <button class="btn edit-btn">Edit</button>
+                                        </a>
+                                        <button class="btn delete-btn">Delete</button>
+                                        <dialog id="deleteModal">
+                                            <button aria-hidden="true" id="closeModalButton">&times;</button>
+                                            <form method="post" action="{% url 'delete post' post.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit">Yes, confirm</button>
+                                                <button type="button">Cancel</button>    
+                                            </form>
+                                        </dialog>
+                                        {% endif %}
+                                </th>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7">Don't have posts</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                
+                <script>
+                    const openModalButton = document. querySelector('.delete-btn');
+                    const modal = document.querySelector('#deleteModal');
+                    const closeModalButton = document.querySelector('#closeModalButton')
+
+                    openModalButton.addEventListener('click', () => {
+                        modal.show();
+                    })
+
+                    closeModalButton.addEventListener('click', () => {
+                        modal.close();
+                    })
+
+                </script>
+            {% endblock main %}
+        </main>
+    </body>
+</html>

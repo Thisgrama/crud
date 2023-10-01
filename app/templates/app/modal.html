@@ -1,0 +1,7 @@
+<dialog id="deleteModal">
+    <button aria-hidden="true" id="closeModalButton">&times;</button>
+    <form method="post" action="{% url 'delete post' post.id %}">
+        {% csrf_token %}
+        <button type="submit">Sim, Excluir</button>
+        <button type="button" id="cancelDeleteButton">Cancelar</button>    </form>
+</dialog>

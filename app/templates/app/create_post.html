@@ -1,0 +1,23 @@
+{% extends 'app/index.html' %}
+
+
+{% block main %}
+<header>
+    <h2>create post</h2>
+</header>
+
+<form method="post">
+    {% csrf_token %}
+
+    <fieldset class="form-group">
+        {{ form.title }}
+    </fieldset>
+
+    <fieldset class="form-group">
+        {{ form.content }}
+    </fieldset>
+
+    <input type="submit" value="Enviar">
+</form>
+
+{% endblock main %}
